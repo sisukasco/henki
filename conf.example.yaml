@@ -1,0 +1,111 @@
+db:
+  url: postgres://xxx:xxx@localhost:5432/authdb_dev?sslmode=disable
+jwt:
+  secret: xx
+  expiry: 3600
+  aud: xxx.com
+  
+redis:
+  url: redis://127.0.0.1:6379/1
+machine:
+  redis:
+    url: redis://127.0.0.1:6379/3
+api:
+  port: 3131
+  api_key:
+    secret: xx
+  
+client:
+  url: https://xxxxx.com
+  external_login_complete_url: https://xxxxx.com/auth/logged/
+  origins: 
+    - https://xxxxx.com
+    
+accountx:
+   api_key: "xxxx"
+
+auth:
+  operator_token: xxxxx
+  site: 
+    url: http://xxxxx:3131
+  cookie:
+    domain: xxxxx.com
+
+services: []
+  
+google:
+  client_id: xxx
+  secret: xxxx
+  redirect_url: https://xxx.com/callback
+
+emails:
+  signup-confirmation:
+    subject: Signup confirmation required
+    body: |-
+      <h2 style="color:#4a5568;">Welcome to DockForm!</h2>
+      <p>
+      Hi {{ FirstName }}!
+      </p>
+
+      You have successfully signed up. <br/>
+      <p>
+      Just one more step remaining ...
+      </p>
+      <p>
+      Please confirm your email address - Click the link below to proceed:<br/>
+      <a href="{{ Link }}">Click here to confirm signup</a>
+      </p>
+
+      <br/>
+      <br/>
+      <p>
+      Best Regards,<br/>
+      </p>
+    
+  reset-password:
+    subject: Lost Password ?
+    body: |-
+      <p>
+      Hi {{ FirstName }}!
+      </p>
+      <p>
+      A request was posted at xxxxx.com to reset your login password.
+      </p>
+      <p>
+      Click the link below to create a new password:
+      <a href="{{ Link }}">Reset Password</a>
+      </p>
+      <p>
+      If you didn't make this request, you can safely ignore this email and your password will remain the same.
+      </p>
+      <br/>
+      <p>
+      Best Regards,<br/>
+      Team<br/>
+      </p>
+  email-update:
+    subject: Email update confirmation required 
+    body: |-
+      <p>
+      Hi {{ FirstName }}!
+      </p>
+      <p>
+      A request was posted at xxxx.com to change your email contact address
+      </p>
+      <p>
+      Click the link below to complete updating the email:
+      <a href="{{ Link }}">Confirm Email Update</a>
+      </p>
+      <p>
+      Please remember that this link is valid only for 24 hours
+      </p>
+      <br/>
+      <p>
+      Best Regards,<br/>
+      Team<br/>
+      </p>
+      <p>
+      If you didn't make this request, please report this issue here:<br/>
+      </p>
+      
+      

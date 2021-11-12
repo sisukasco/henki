@@ -1,0 +1,23 @@
+version: "1"
+packages:
+  - name: "db"
+    emit_json_tags: true
+    emit_prepared_queries: false
+    emit_interface: false
+    path: "./pkg/db"
+    queries: 
+      - pkg/db/queries/users.sql
+      - pkg/db/queries/refresh_tokens.sql
+      - pkg/db/queries/api_keys.sql
+      
+    schema: 
+      - pkg/db/migrations/000001_create_users_table.up.sql
+      - pkg/db/migrations/000002_create_refresh_tokens_table.up.sql
+      - pkg/db/migrations/000003_create_api_keys_table.up.sql
+      
+    overrides:
+      - column: "users.raw_app_meta_data"
+        go_type: "github.com/sisukasco/commons/utils.JSONMap"
+      - column: "users.raw_user_meta_data"
+        go_type: "github.com/sisukasco/commons/utils.JSONMap"
+        

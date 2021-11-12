@@ -1,0 +1,3 @@
+DROP INDEX refresh_tokens_user_id_idx;
+DROP INDEX refresh_tokens_token_idx;
+DROP TABLE refresh_tokens

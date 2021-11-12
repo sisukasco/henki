@@ -13,3 +13,10 @@
 
 # Dependency directories (remove the comment below to include it)
 # vendor/
+
+node_modules/
+.DS_Store
+conf-dev.yaml
+conf-staging.yaml
+deploy/bin
+deploy/migrations
