@@ -5,8 +5,8 @@ module.exports = {
     testTimeout: 30000,
     "globals": {
         "test_config": {
-            endpoint: "http://api.dockform.com",
-            aud: "api.dockform.com"
+            endpoint: "http://api.ratufa.io",
+            aud: "api.ratufa.io"
         }
     }
 }

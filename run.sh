@@ -52,6 +52,10 @@ function migrateStagingDBDown(){
 }
 
 function runDev(){
+    if [ ! -f "conf-dev.yaml" ]; then
+        echo "Configuration file conf-dev.yaml does not exist."
+        return 1
+    fi    
     echo "Running auth in development mode ..."
     SISUKAS_ENVIRONMENT=development \
     SISUKAS_LOGGED_IN_USER_FOR_TESTING=testing_user \
@@ -59,6 +63,10 @@ function runDev(){
 }
 
 function runStaging(){
+    if [ ! -f "conf-staging.yaml" ]; then
+        echo "Configuration file conf-staging.yaml does not exist."
+        return 1
+    fi    
     echo "Running auth in staging mode ..."
     
     go run ./cmd --conf conf-staging.yaml serve
@@ -126,6 +134,10 @@ case $COMMAND in
         esac
     ;;
     test)
+        if [ ! -f "conf-dev.yaml" ]; then
+            echo "Error: Configuration file conf-dev.yaml does not exist."
+            exit 1
+        fi
         case $WHAT in
            local)
                 runAllTests

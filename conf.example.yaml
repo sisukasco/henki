@@ -42,7 +42,7 @@ emails:
   signup-confirmation:
     subject: Signup confirmation required
     body: |-
-      <h2 style="color:#4a5568;">Welcome to DockForm!</h2>
+      <h2 style="color:#4a5568;">Welcome to Ratufa!</h2>
       <p>
       Hi {{ FirstName }}!
       </p>

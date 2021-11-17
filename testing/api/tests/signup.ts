@@ -39,11 +39,7 @@ test('SU101: Raw Signup should work fine', async function () {
 })
     
 test('SU102: Signup should work fine', async function () {
-    /*let auth= new Chimes( "http://local.dockform.com:3121", 
-                "local.dockform.com") 
-    let res = await auth.signup("somename2@ajshdkjash.com", "alonglongpwd",{})
-    expect(res.status).toBe("ok")
-    */
+    
    let u = new TestUser()
    if(await u.signupRandomUser())
    {
