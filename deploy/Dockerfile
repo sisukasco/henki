@@ -1,5 +1,5 @@
 FROM alpine
-COPY bin/auth /home/
+COPY bin/henki /home/
 COPY /migrations/* /home/migrations/
 EXPOSE 3131
-CMD ["/home/auth"]
+CMD ["/home/henki"]
