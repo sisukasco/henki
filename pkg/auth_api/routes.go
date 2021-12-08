@@ -32,7 +32,8 @@ func (a *AuthApi) Routes(r *chi.Mux) {
 	r.Get("/callback", a.ExternalProviderCallback)
 
 	//change user account type
-	r.Post("/account/update", a.UpdateAccount)
-	r.Post("/account/remove", a.RemoveAccount)
+	// This not required for the time being
+	//r.Post("/account/update", a.UpdateAccount)
+	//r.Post("/account/remove", a.RemoveAccount)
 
 }
