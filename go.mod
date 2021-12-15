@@ -11,7 +11,6 @@ require (
 	github.com/knadh/koanf v1.2.3
 	github.com/lib/pq v1.9.0
 	github.com/pkg/errors v0.9.1
-	github.com/prasanthmj/machine v0.0.3
 	github.com/sisukasco/commons v0.0.0-20211112140250-74f48d71434f
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.7.0

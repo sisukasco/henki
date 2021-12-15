@@ -4,12 +4,7 @@ jwt:
   secret: xx
   expiry: 3600
   aud: xxx.com
-  
-redis:
-  url: redis://127.0.0.1:6379/1
-machine:
-  redis:
-    url: redis://127.0.0.1:6379/3
+
 api:
   port: 3131
   api_key:
