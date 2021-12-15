@@ -2,16 +2,16 @@ package usersvc
 
 import (
 	"context"
-	"github.com/sisukasco/commons/http_utils"
-	"github.com/sisukasco/commons/stringid"
-	"github.com/sisukasco/commons/utils"
-	"github.com/sisukasco/henki/pkg/db"
 	"log"
 	"strings"
 	"time"
 
+	"github.com/sisukasco/commons/http_utils"
+	"github.com/sisukasco/commons/stringid"
+	"github.com/sisukasco/commons/utils"
+	"github.com/sisukasco/henki/pkg/db"
+
 	"github.com/cbroglie/mustache"
-	"github.com/prasanthmj/machine"
 )
 
 type ConfirmEmailInfo struct {
@@ -37,10 +37,20 @@ func (usvc *UserService) SendEmailConfirmationRequest(ctx context.Context, userI
 		}
 	}
 
-	job := machine.NewJob(&ConfirmationEmailTask{user.ID})
-	usvc.svc.JQ.QueueUp(job)
+	usvc.PostConfirmationEmail(user.ID)
 
 	return nil
+}
+
+func (usvc *UserService) PostConfirmationEmail(userID string) {
+	usvc.wg.Add(1)
+	ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+	go func() {
+		defer cancel()
+		defer usvc.wg.Done()
+		usvc.sendConfirmationEmail(ctx, userID)
+	}()
+
 }
 
 type ConfirmEmailResponse struct {
@@ -78,8 +88,7 @@ func (usvc *UserService) ConfirmUserEmail(ctx context.Context, code string) (*Co
 
 //sendConfirmationEmail is called from the task (in the job queue)
 // So this function is called asynchronously
-func (usvc *UserService) sendConfirmationEmail(userID string) {
-	ctx := context.Background()
+func (usvc *UserService) sendConfirmationEmail(ctx context.Context, userID string) {
 
 	log.Printf("sending confirmation email to %s ", userID)
 	user, err := usvc.svc.DB.Q.GetUser(ctx, userID)

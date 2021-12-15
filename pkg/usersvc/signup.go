@@ -2,14 +2,13 @@ package usersvc
 
 import (
 	"context"
+	"strings"
+
 	"github.com/sisukasco/commons/http_utils"
 	"github.com/sisukasco/commons/stringid"
 	"github.com/sisukasco/commons/utils"
 	"github.com/sisukasco/henki/pkg/db"
 	"github.com/sisukasco/henki/pkg/external"
-	"strings"
-
-	"github.com/prasanthmj/machine"
 )
 
 // SignupParams are the parameters the Signup endpoint accepts
@@ -50,8 +49,7 @@ func (this *UserService) SignupNewUser(ctx context.Context, params *SignupParams
 		return nil, http_utils.InternalServerError("Couldn't create new user").WithInternalError(err)
 	}
 
-	job := machine.NewJob(&ConfirmationEmailTask{user.ID})
-	this.svc.JQ.QueueUp(job)
+	this.PostConfirmationEmail(user.ID)
 
 	return user, nil
 }

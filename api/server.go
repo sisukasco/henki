@@ -59,8 +59,6 @@ func (srv *Server) Start() {
 		os.Exit(1)
 	}
 
-	srv.svc.JQ.Start()
-
 	go func() {
 		if err := srv.ListenAndServe(); err != http.ErrServerClosed {
 			panic(err)
@@ -74,10 +72,9 @@ func (srv *Server) Start() {
 	log.Println("Shutting down server... Reason:", sig)
 
 	// teardown logic...
-	srv.svc.JQ.Stop()
-
 	if err := srv.Shutdown(context.Background()); err != nil {
 		panic(err)
 	}
+	srv.webAPI.Shutdown()
 	log.Println("Server gracefully stopped")
 }

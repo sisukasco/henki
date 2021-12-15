@@ -3,14 +3,15 @@ package usersvc_test
 import (
 	"context"
 	"fmt"
+	"testing"
+	"time"
+
 	"github.com/sisukasco/commons/utils"
 	"github.com/sisukasco/henki/pkg/db"
 	"github.com/sisukasco/henki/pkg/external"
 	"github.com/sisukasco/henki/pkg/service"
 	dtesting "github.com/sisukasco/henki/pkg/testing"
 	"github.com/sisukasco/henki/pkg/usersvc"
-	"testing"
-	"time"
 
 	"github.com/stretchr/testify/assert"
 	"syreclabs.com/go/faker"
@@ -24,9 +25,7 @@ var (
 func TestMain(m *testing.M) {
 	dtesting.InitService(m, func(s *service.Service) {
 		svc = s
-		svc.JQ.Start()
 	}, func() {
-		svc.JQ.Stop()
 	})
 
 }

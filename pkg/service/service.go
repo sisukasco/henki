@@ -1,19 +1,18 @@
 package service
 
 import (
+	"log"
+
 	"github.com/sisukasco/commons/auth"
 	"github.com/sisukasco/commons/redis"
-	"log"
 
 	"github.com/knadh/koanf"
 	"github.com/pkg/errors"
-	"github.com/prasanthmj/machine"
 )
 
 type Service struct {
 	Konf  *koanf.Koanf
 	DB    *DBConnection
-	JQ    *machine.JobQueue
 	Redis *redis.Redis
 	AuthM *auth.AuthMiddleware
 }
@@ -27,13 +26,6 @@ func NewService(Konf *koanf.Koanf) (*Service, error) {
 		return nil, errors.Wrap(err, "Service Initializing DB")
 	}
 
-	machineRedisURL := Konf.String("machine.redis.url")
-
-	jq, err := machine.New(machineRedisURL)
-	if err != nil {
-		return nil, errors.Wrap(err, "Service Initializing JQ")
-	}
-
 	redisURL := Konf.String("redis.url")
 	red, err := redis.New(redisURL)
 	if err != nil {
@@ -42,7 +34,7 @@ func NewService(Konf *koanf.Koanf) (*Service, error) {
 
 	am := auth.NewAuthMiddleware(getJWTConf(Konf))
 
-	return &Service{Konf: Konf, DB: db, JQ: jq, Redis: red, AuthM: am}, nil
+	return &Service{Konf: Konf, DB: db, Redis: red, AuthM: am}, nil
 }
 
 func (svc *Service) InitServer() error {

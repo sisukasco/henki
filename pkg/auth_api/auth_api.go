@@ -16,6 +16,6 @@ func NewAuthApi(svc *service.Service) *AuthApi {
 	return &AuthApi{us, svc}
 }
 
-func (a *AuthApi) GetUserService() *usersvc.UserService {
-	return a.usvc
+func (a *AuthApi) Shutdown() {
+	a.usvc.Shutdown()
 }

@@ -1,11 +1,12 @@
 package api
 
 import (
-	"github.com/sisukasco/henki/pkg/auth_api"
-	"github.com/sisukasco/henki/pkg/service"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/sisukasco/henki/pkg/auth_api"
+	"github.com/sisukasco/henki/pkg/service"
 
 	chi "github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
@@ -65,4 +66,8 @@ func corsConfig(konf *koanf.Koanf) cors.Options {
 	log.Printf("Auth returning cors %v", opp)
 
 	return opp
+}
+
+func (webapi *WebAPI) Shutdown() {
+	webapi.authAPI.Shutdown()
 }

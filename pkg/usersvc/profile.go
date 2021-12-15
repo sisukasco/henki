@@ -2,18 +2,18 @@ package usersvc
 
 import (
 	"context"
+	"log"
+	"strings"
+	"time"
+
 	emailer "github.com/sisukasco/commons/email"
 	"github.com/sisukasco/commons/http_utils"
 	"github.com/sisukasco/commons/stringid"
 	"github.com/sisukasco/commons/utils"
 	"github.com/sisukasco/henki/pkg/db"
-	"log"
-	"strings"
-	"time"
 
 	"github.com/cbroglie/mustache"
 	"github.com/pkg/errors"
-	"github.com/prasanthmj/machine"
 )
 
 type EmailUpdateInfo struct {
@@ -21,10 +21,9 @@ type EmailUpdateInfo struct {
 	Link      string
 }
 
-func (usvc *UserService) sendEmailUpdateEmail(userID string,
+func (usvc *UserService) sendEmailUpdateEmail(ctx context.Context, userID string,
 	new_email string) {
 
-	ctx := context.Background()
 	log.Printf("Beginning email update for user ID %s", userID)
 
 	user, err := usvc.svc.DB.Q.GetUser(ctx, userID)
@@ -112,14 +111,23 @@ func (usvc *UserService) UpdateProfileField(ctx context.Context, user *db.User,
 			return http_utils.UnprocessableEntityError("A user with the same email address already exists.")
 		}
 
-		job := machine.NewJob(&emailUpdateConfirmationTask{user.ID, email})
-		usvc.svc.JQ.QueueUp(job)
+		usvc.PostEmailUpdateConfirmation(user.ID, email)
 
 	default:
 		return errors.New("Unknown Field name " + fieldName)
 	}
 
 	return err
+}
+
+func (usvc *UserService) PostEmailUpdateConfirmation(userID string, email string) {
+	usvc.wg.Add(1)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	go func() {
+		defer cancel()
+		defer usvc.wg.Done()
+		usvc.sendEmailUpdateEmail(ctx, userID, email)
+	}()
 }
 
 func (usvc *UserService) CompleteEmailUpdate(ctx context.Context, token string) error {

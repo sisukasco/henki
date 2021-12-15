@@ -2,16 +2,16 @@ package usersvc
 
 import (
 	"context"
-	"github.com/sisukasco/commons/http_utils"
-	"github.com/sisukasco/commons/stringid"
-	"github.com/sisukasco/commons/utils"
-	"github.com/sisukasco/henki/pkg/db"
 	"log"
 	"strings"
 	"time"
 
+	"github.com/sisukasco/commons/http_utils"
+	"github.com/sisukasco/commons/stringid"
+	"github.com/sisukasco/commons/utils"
+	"github.com/sisukasco/henki/pkg/db"
+
 	"github.com/cbroglie/mustache"
-	"github.com/prasanthmj/machine"
 )
 
 type ResetPasswordInfo struct {
@@ -47,8 +47,7 @@ func (usvc *UserService) generatePasswordResetToken(ctx context.Context, userID 
 //sendPasswordResetEmail is called from task that is called from job queue
 //Composes and sends the password reset email. Does not send email if called
 //more than once in an hour
-func (usvc *UserService) sendPasswordResetEmail(email string) {
-	ctx := context.Background()
+func (usvc *UserService) sendPasswordResetEmail(ctx context.Context, email string) {
 
 	log.Printf("sending password reset email to %s ", email)
 	user, err := usvc.svc.DB.Q.GetUserByEmail(ctx, email)
@@ -95,10 +94,18 @@ func (usvc *UserService) InitResetPasswordRequest(ctx context.Context, email str
 		}
 	}
 
-	job := machine.NewJob(&PasswordResetEmailTask{email})
-	usvc.svc.JQ.QueueUp(job)
+	usvc.PostPasswordResetEmail(email)
 
 	return nil
+}
+func (usvc *UserService) PostPasswordResetEmail(email string) {
+	usvc.wg.Add(1)
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	go func() {
+		defer cancel()
+		defer usvc.wg.Done()
+		usvc.sendPasswordResetEmail(ctx, email)
+	}()
 }
 
 func (usvc *UserService) ResetPassword(ctx context.Context, token string, passwd string) error {
