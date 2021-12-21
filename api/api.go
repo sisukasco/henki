@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/sisukasco/henki/pkg/auth_api"
+	"github.com/sisukasco/henki/pkg/client_api"
 	"github.com/sisukasco/henki/pkg/service"
 
 	chi "github.com/go-chi/chi/v5"
@@ -20,9 +21,10 @@ const (
 )
 
 type WebAPI struct {
-	authAPI *auth_api.AuthApi
-	pingAPI *PingApi
-	Handler *chi.Mux
+	authAPI   *auth_api.AuthApi
+	pingAPI   *PingApi
+	Handler   *chi.Mux
+	clientAPI *client_api.ClientApi
 }
 
 func NewWebAPI(svc *service.Service) *WebAPI {
@@ -45,7 +47,13 @@ func NewWebAPI(svc *service.Service) *WebAPI {
 	authAPI := auth_api.NewAuthApi(svc)
 	authAPI.Routes(r)
 
-	webAPI := &WebAPI{authAPI, pingAPI, r}
+	clientAPI := client_api.NewClientApi(svc, authAPI.GetUserService())
+
+	if svc.Konf.Bool("apiClients.enable") {
+		clientAPI.Routes(r)
+	}
+
+	webAPI := &WebAPI{authAPI, pingAPI, r, clientAPI}
 
 	return webAPI
 }

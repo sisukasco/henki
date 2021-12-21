@@ -18,3 +18,5 @@ require (
 	golang.org/x/oauth2 v0.0.0-20201109201403-9fd604954f58
 	syreclabs.com/go/faker v1.2.3
 )
+
+replace github.com/sisukasco/commons => ../commons
