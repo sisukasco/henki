@@ -72,6 +72,19 @@ function runStaging(){
     go run ./cmd --conf conf-staging.yaml serve
 }
 
+function buildLinuxVersion(){
+    mkdir -p ./deploy/bin
+    rm ./deploy/bin/henki
+    perl -pe '/^VERSION=/ and s/(\d+\.\d+\.)(\d+)/$1 . ($2+1)/e' -i ./version
+    source ./version
+    #VERSION=1.0.17
+    echo "Compiling Henki ..."
+    BUILD_TIME=$(date)
+    
+    CGO_ENABLED=0 GOOS=linux go build -ldflags="-X 'github.com/sisukasco/henki/pkg/version.BuildTime=$BUILD_TIME' -X 'github.com/sisukasco/henki/pkg/version.Version=$VERSION'" -a -installsuffix cgo -o ./deploy/bin/henki ./cmd
+    
+    test $? -eq 0 || exit 1    
+}
 
 function runAllTests(){
     SISUKAS_ENVIRONMENT=development \
@@ -130,6 +143,13 @@ case $COMMAND in
             ;;
             staging)
                 runStaging
+            ;;
+        esac
+    ;;
+    build)
+        case $WHAT in
+            linux-version)
+                buildLinuxVersion
             ;;
         esac
     ;;
