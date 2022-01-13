@@ -81,7 +81,7 @@ function buildLinuxVersion(){
     echo "Compiling Henki ..."
     BUILD_TIME=$(date)
     
-    CGO_ENABLED=0 GOOS=linux go build -ldflags="-X 'github.com/sisukasco/henki/pkg/version.BuildTime=$BUILD_TIME' -X 'github.com/sisukasco/henki/pkg/version.Version=$VERSION'" -a -installsuffix cgo -o ./deploy/bin/henki ./cmd
+    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-X 'github.com/sisukasco/henki/pkg/version.BuildTime=$BUILD_TIME' -X 'github.com/sisukasco/henki/pkg/version.Version=$VERSION'" -a -installsuffix cgo -o ./deploy/bin/henki ./cmd
     
     test $? -eq 0 || exit 1    
 }
