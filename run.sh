@@ -3,6 +3,12 @@
 # run.sh run local
 # run.sh migrate up
 # run.sh migrate down
+set -o allexport
+if [ -f .env ]
+then
+    source .env
+fi
+set +o allexport
 
 function resetDevDB(){
     echo "reseting the Dev DB..."
