@@ -9,10 +9,10 @@ variables:
   # Please edit to your GitLab project
   REPO_NAME: gitlab.com/sisukasco/henki
   POSTGRES_DB: authdb_dev # Set database.
-  POSTGRES_USER: authuser # Set username.
-  POSTGRES_PASSWORD: xRdkvm54DhjWBjwU
+  POSTGRES_USER: authuserMpWapdM # Set username.
+  POSTGRES_PASSWORD: NfZbCi2AVgKFam5Lvj3riui4LcjmMKWM
   POSTGRES_HOST_AUTH_METHOD: "trust"
-  HENKI_DB_URL: postgres://authuser:xRdkvm54DhjWBjwU@postgres:5432/authdb_dev?sslmode=disable
+  HENKI_DB_URL: postgres://authuserMpWapdM:NfZbCi2AVgKFam5Lvj3riui4LcjmMKWM@postgres:5432/authdb_dev?sslmode=disable
 
 compile:
   stage: build
@@ -48,4 +48,4 @@ dind-build:
       - cp ./pkg/db/migrations/* ./deploy/migrations
       - docker build -t registry.gitlab.com/sisukasco/henki -t registry.gitlab.com/sisukasco/henki:$VERSION ./deploy
       - docker push registry.gitlab.com/sisukasco/henki --all-tags
-      
+      - echo "deployed "
