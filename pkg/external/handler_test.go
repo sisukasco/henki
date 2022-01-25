@@ -2,12 +2,13 @@ package external_test
 
 import (
 	"context"
+	"net/url"
+	"testing"
+
 	"github.com/sisukasco/commons/utils"
 	"github.com/sisukasco/henki/pkg/external"
 	"github.com/sisukasco/henki/pkg/service"
 	dtesting "github.com/sisukasco/henki/pkg/testing"
-	"net/url"
-	"testing"
 )
 
 var (
@@ -15,7 +16,7 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	dtesting.InitService(m, func(s *service.Service) {
+	dtesting.InitService(m, "../../conf-dev.yaml", func(s *service.Service) {
 		svc = s
 	}, func() {})
 }

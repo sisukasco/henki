@@ -29,7 +29,7 @@ unit_tests:
   stage: test
   script: 
     - export HENKI_DB_URL=$HENKI_DB_URL && bash run.sh migrate dev
-    - export HENKI_DB_URL=$HENKI_DB_URL && bash run.sh test ./pkg/usersvc
+    - export HENKI_DB_URL=$HENKI_DB_URL && bash run.sh test local
   services:
     - postgres:13-alpine
 

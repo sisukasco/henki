@@ -1,0 +1,108 @@
+db:
+  url: postgres://dbuser:dbsecret@localhost:5432/authdb_dev?sslmode=disable
+jwt:
+  secret: Secret
+  expiry: 3600
+  aud: website.com
+  
+api:
+  port: 3131
+  api_key:
+    secret: h3PeFKetKP27ubLc64QVMbDQTGG4PR8S
+  
+client:
+  url: https://www.website.com
+  external_login_complete_url: https://www.website.com/auth/logged/
+  origins: 
+    - https://www.website.com
+    
+
+auth:
+  operator_token: XVCJ9eyJhdWQiOiJhcGkuZG9ja2Zvcm0u
+  site: 
+    url: http://local.website.com:3131
+  cookie:
+    domain: website.com
+
+services: {}
+  
+google:
+  client_id: xxxxxx
+  secret: xxxxxxxxx
+  redirect_url: https://auth.website.com/callback
+
+emails:
+  signup-confirmation:
+    subject: website signup confirmation required
+    body: |-
+      <h2 style="color:#4a5568;">Welcome to website!</h2>
+      <p>
+      Hi {{ FirstName }}!
+      </p>
+
+      You have successfully signed up with website. <br/>
+      <p>
+      Just one more step remaining ...
+      </p>
+      <p>
+      Please confirm your email address - Click the link below to proceed:<br/>
+      <a href="{{ Link }}">Click here to confirm signup</a>
+      </p>
+
+      Complete this step and connect your HTML forms with website.
+      <br/>
+      <br/>
+      <p>
+      Best Regards,<br/>
+      Prasanth<br/>
+      <a href="https://www.website.com">website.com</a>
+      </p>
+    
+  reset-password:
+    subject: Lost Password for website?
+    body: |-
+      <p>
+      Hi {{ FirstName }}!
+      </p>
+      <p>
+      A request was posted at website.com to reset your login password.
+      </p>
+      <p>
+      Click the link below to create a new password:
+      <a href="{{ Link }}">Reset Password</a>
+      </p>
+      <p>
+      If you didn't make this request, you can safely ignore this email and your password will remain the same.
+      </p>
+      <br/>
+      <p>
+      Best Regards,<br/>
+      Team<br/>
+      <a href="https://www.website.com">website.com</a>
+      </p>
+  email-update:
+    subject: Email update confirmation required for website
+    body: |-
+      <p>
+      Hi {{ FirstName }}!
+      </p>
+      <p>
+      A request was posted at website.com to change your email contact address
+      </p>
+      <p>
+      Click the link below to complete updating the email:
+      <a href="{{ Link }}">Confirm Email Update</a>
+      </p>
+      <p>
+      Please remember that this link is valid only for 24 hours
+      </p>
+      <br/>
+      <p>
+      Best Regards,<br/>
+      Team<br/>
+      <a href="https://www.website.com">website.com</a>
+      </p>
+      <p>
+      If you didn't make this request, please report this issue here:<br/>
+      <a href="https://www.website.com/support/">website support</a>
+      </p>

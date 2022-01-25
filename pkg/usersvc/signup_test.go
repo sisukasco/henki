@@ -23,7 +23,7 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	dtesting.InitService(m, func(s *service.Service) {
+	dtesting.InitService(m, "../../conf-dev.yaml", func(s *service.Service) {
 		svc = s
 	}, func() {
 	})
