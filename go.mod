@@ -19,4 +19,3 @@ require (
 	syreclabs.com/go/faker v1.2.3
 )
 
-replace github.com/sisukasco/commons => ../commons
