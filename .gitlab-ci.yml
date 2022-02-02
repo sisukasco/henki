@@ -15,17 +15,17 @@ variables:
   POSTGRES_HOST_AUTH_METHOD: "trust"
   HENKI_DB_URL: postgres://authuserMpWapdM:NfZbCi2AVgKFam5Lvj3riui4LcjmMKWM@postgres:5432/authdb_dev?sslmode=disable
 
-# compile:
-#   stage: build
-#   script:
-#     - mkdir -p ./deploy/bin
-#     - source ./version
-#     - BUILD_TIME=$(date) CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-X 'github.com/sisukasco/henki/pkg/version.BuildTime=$BUILD_TIME' -X 'github.com/sisukasco/henki/pkg/version.Version=$VERSION'" -a -installsuffix cgo -o ./deploy/bin/henki ./cmd
-#     
-#   artifacts:
-#     paths:
-#       - deploy/bin
-# 
+compile:
+  stage: build
+  script:
+    - mkdir -p ./deploy/bin
+    - source ./version
+    - BUILD_TIME=$(date) CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-X 'github.com/sisukasco/henki/pkg/version.BuildTime=$BUILD_TIME' -X 'github.com/sisukasco/henki/pkg/version.Version=$VERSION'" -a -installsuffix cgo -o ./deploy/bin/henki ./cmd
+    
+  artifacts:
+    paths:
+      - deploy/bin
+
 # unit_tests:
 #   stage: test
 #   script: 
@@ -34,22 +34,22 @@ variables:
 #   services:
 #     - postgres:13-alpine
 # 
-# dind-build:
-#    stage: deploy
-#    image: docker:20
-#    only:
-#       - main
-#    services:
-#       - docker:20-dind
-#    before_script:
-#       - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-#    script:
-#       - source ./version
-#       - mkdir -p ./deploy/migrations
-#       - cp ./pkg/db/migrations/* ./deploy/migrations
-#       - docker build -t registry.gitlab.com/sisukasco/henki -t registry.gitlab.com/sisukasco/henki:$VERSION ./deploy
-#       - docker push registry.gitlab.com/sisukasco/henki --all-tags
-#       - echo "deployed "
+dind-build:
+   stage: deploy
+   image: docker:20
+   only:
+      - main
+   services:
+      - docker:20-dind
+   before_script:
+      - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+   script:
+      - source ./version
+      - mkdir -p ./deploy/migrations
+      - cp ./pkg/db/migrations/* ./deploy/migrations
+      - docker build -t registry.gitlab.com/sisukasco/henki -t registry.gitlab.com/sisukasco/henki:$VERSION ./deploy
+      - docker push registry.gitlab.com/sisukasco/henki --all-tags
+      - echo "deployed "
 
 
 deploy_staging:
