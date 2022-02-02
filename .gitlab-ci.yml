@@ -2,8 +2,8 @@ image: golang:1.17
 
 stages:
   #- test
-  #- build
-  #- deploy
+  - build
+  - deploy_docker
   - deploy_staging
 
 variables:
@@ -34,8 +34,9 @@ compile:
 #   services:
 #     - postgres:13-alpine
 # 
-dind-build:
-   stage: deploy
+
+deploy_docker:
+   stage: deploy_docker
    image: docker:20
    only:
       - main
