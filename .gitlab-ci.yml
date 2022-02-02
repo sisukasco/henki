@@ -1,10 +1,11 @@
 image: golang:1.17
 
 stages:
-  - test
-  - build
-  - deploy
-  
+  #- test
+  #- build
+  #- deploy
+  - deploy_staging
+
 variables:
   # Please edit to your GitLab project
   REPO_NAME: gitlab.com/sisukasco/henki
@@ -14,38 +15,54 @@ variables:
   POSTGRES_HOST_AUTH_METHOD: "trust"
   HENKI_DB_URL: postgres://authuserMpWapdM:NfZbCi2AVgKFam5Lvj3riui4LcjmMKWM@postgres:5432/authdb_dev?sslmode=disable
 
-compile:
-  stage: build
-  script:
-    - mkdir -p ./deploy/bin
-    - source ./version
-    - BUILD_TIME=$(date) CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-X 'github.com/sisukasco/henki/pkg/version.BuildTime=$BUILD_TIME' -X 'github.com/sisukasco/henki/pkg/version.Version=$VERSION'" -a -installsuffix cgo -o ./deploy/bin/henki ./cmd
-    
-  artifacts:
-    paths:
-      - deploy/bin
+# compile:
+#   stage: build
+#   script:
+#     - mkdir -p ./deploy/bin
+#     - source ./version
+#     - BUILD_TIME=$(date) CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-X 'github.com/sisukasco/henki/pkg/version.BuildTime=$BUILD_TIME' -X 'github.com/sisukasco/henki/pkg/version.Version=$VERSION'" -a -installsuffix cgo -o ./deploy/bin/henki ./cmd
+#     
+#   artifacts:
+#     paths:
+#       - deploy/bin
+# 
+# unit_tests:
+#   stage: test
+#   script: 
+#     - export HENKI_DB_URL=$HENKI_DB_URL && bash run.sh migrate dev
+#     - export HENKI_DB_URL=$HENKI_DB_URL && bash run.sh test local
+#   services:
+#     - postgres:13-alpine
+# 
+# dind-build:
+#    stage: deploy
+#    image: docker:20
+#    only:
+#       - main
+#    services:
+#       - docker:20-dind
+#    before_script:
+#       - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+#    script:
+#       - source ./version
+#       - mkdir -p ./deploy/migrations
+#       - cp ./pkg/db/migrations/* ./deploy/migrations
+#       - docker build -t registry.gitlab.com/sisukasco/henki -t registry.gitlab.com/sisukasco/henki:$VERSION ./deploy
+#       - docker push registry.gitlab.com/sisukasco/henki --all-tags
+#       - echo "deployed "
 
-unit_tests:
-  stage: test
-  script: 
-    - export HENKI_DB_URL=$HENKI_DB_URL && bash run.sh migrate dev
-    - export HENKI_DB_URL=$HENKI_DB_URL && bash run.sh test local
-  services:
-    - postgres:13-alpine
 
-dind-build:
-   stage: deploy
-   image: docker:20
-   only:
-      - main
-   services:
-      - docker:20-dind
-   before_script:
-      - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-   script:
-      - source ./version
-      - mkdir -p ./deploy/migrations
-      - cp ./pkg/db/migrations/* ./deploy/migrations
-      - docker build -t registry.gitlab.com/sisukasco/henki -t registry.gitlab.com/sisukasco/henki:$VERSION ./deploy
-      - docker push registry.gitlab.com/sisukasco/henki --all-tags
-      - echo "deployed "
+deploy_staging:
+    stage: deploy_staging
+    before_script:
+      - apk --no-cache add curl
+    image:
+      name: "registry.gitlab.com/gitlab-org/cluster-integration/cluster-applications:v1.3.2"
+      entrypoint: [""]
+    script:
+      - kubectl config use-context $KUBE_CONTEXT
+      - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/sisukasco/ratufa-devops
+      - cd ratufa-devops/applications/auth
+      - helmfile sync 
+      - curl https://auth.staging.ratufa.io/ping | grep pong
+   
