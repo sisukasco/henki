@@ -54,6 +54,8 @@ variables:
 
 deploy_staging:
     stage: deploy_staging
+    environment:
+      name: RATUFA_STAGING
     before_script:
       - apk --no-cache add curl
     image:
