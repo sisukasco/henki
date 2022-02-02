@@ -15,7 +15,7 @@ variables:
   POSTGRES_HOST_AUTH_METHOD: "trust"
   HENKI_DB_URL: postgres://authuserMpWapdM:NfZbCi2AVgKFam5Lvj3riui4LcjmMKWM@postgres:5432/authdb_dev?sslmode=disable
 
-compile:
+build:
   stage: build
   script:
     - mkdir -p ./deploy/bin
@@ -34,6 +34,7 @@ compile:
 #   services:
 #     - postgres:13-alpine
 # 
+
 
 deploy_docker:
    stage: deploy_docker
