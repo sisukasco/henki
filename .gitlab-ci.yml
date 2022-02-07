@@ -67,6 +67,6 @@ deploy_staging:
       - kubectl config use-context $KUBE_CONTEXT
       - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/sisukasco/ratufa-devops
       - cd ratufa-devops/applications/auth
-      - helmfile sync 
+      - helmfile --environment staging --namespace "ratufa-staging" sync 
       - curl https://auth.staging.ratufa.io/ping | grep pong
    
