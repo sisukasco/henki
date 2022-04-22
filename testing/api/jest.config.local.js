@@ -5,10 +5,10 @@ module.exports = {
     testTimeout: 30000,
     "globals": {
         "test_config": {
-            endpoint: "http://local.ratufa.io:3131",
-            aud: "local.ratufa.io",
+            endpoint: "http://localhost:3131",
+            aud: "localhost",
             emails: {
-                endpoint: "http://local.ratufa.io:8025"
+                endpoint: "http://localhost:8025"
             }
         }
     }
