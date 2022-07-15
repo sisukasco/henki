@@ -4,10 +4,8 @@ stages:
   #- test
   - build
   - deploy_docker
-  - deploy_staging
 
 variables:
-  # Please edit to your GitLab project
   REPO_NAME: gitlab.com/sisukasco/henki
   POSTGRES_DB: authdb_dev # Set database.
   POSTGRES_USER: authuserMpWapdM # Set username.
@@ -26,6 +24,7 @@ build:
     paths:
       - deploy/bin
 
+# TODO: Get the unit tests working in the pipeline
 # unit_tests:
 #   stage: test
 #   script: 
@@ -54,19 +53,3 @@ deploy_docker:
       - echo "deployed "
 
 
-deploy_staging:
-    stage: deploy_staging
-    environment:
-      name: RATUFA_STAGING
-    before_script:
-      - apk --no-cache add curl
-    image:
-      name: "registry.gitlab.com/gitlab-org/cluster-integration/cluster-applications:v1.3.2"
-      entrypoint: [""]
-    script:
-      - kubectl config use-context $KUBE_CONTEXT
-      - git clone https://gitlab-ci-token:${CI_JOB_TOKEN}@gitlab.com/sisukasco/ratufa-devops
-      - cd ratufa-devops/applications/auth
-      - helmfile --environment staging --namespace "ratufa-staging" sync 
-      - curl https://auth.staging.ratufa.io/ping | grep pong
-   
