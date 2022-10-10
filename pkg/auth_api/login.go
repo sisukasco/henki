@@ -1,10 +1,10 @@
 package auth_api
 
 import (
+	"net/http"
+
 	"github.com/sisukasco/commons/http_utils"
 	"github.com/sisukasco/henki/pkg/usersvc"
-	"log"
-	"net/http"
 )
 
 func (a *AuthApi) GetToken(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +29,6 @@ func (a *AuthApi) handleGetToken(w http.ResponseWriter, r *http.Request) (interf
 	}
 
 	http.SetCookie(w, &cookie)
-	log.Printf("Setting cookie to access token %v", token.Token)
 
 	return token, nil
 }

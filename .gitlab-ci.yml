@@ -24,16 +24,6 @@ build:
     paths:
       - deploy/bin
 
-# TODO: Get the unit tests working in the pipeline
-# unit_tests:
-#   stage: test
-#   script: 
-#     - export HENKI_DB_URL=$HENKI_DB_URL && bash run.sh migrate dev
-#     - export HENKI_DB_URL=$HENKI_DB_URL && bash run.sh test local
-#   services:
-#     - postgres:13-alpine
-# 
-
 unit_tests:
   stage: test
   script: 

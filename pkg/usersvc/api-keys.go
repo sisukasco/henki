@@ -78,7 +78,6 @@ func (usvc *UserService) GetUserIDFromAPIKey(apiKey string) (string, error) {
 		return "", err
 	}
 
-	log.Printf("Decrypted API Key %v ", strKey)
 	parts := strings.Split(strKey, ",")
 	if len(parts) == 2 {
 		return parts[0], nil

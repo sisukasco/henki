@@ -3,10 +3,11 @@ package usersvc_test
 import (
 	"context"
 	"encoding/json"
-	"github.com/sisukasco/commons/utils"
-	"github.com/sisukasco/henki/pkg/usersvc"
 	"testing"
 	"time"
+
+	"github.com/sisukasco/commons/utils"
+	"github.com/sisukasco/henki/pkg/usersvc"
 
 	"github.com/stretchr/testify/assert"
 	"syreclabs.com/go/faker"
@@ -151,7 +152,6 @@ func getUserType(ctx context.Context, userID string) (string, error) {
 		return "", err
 	}
 
-	//log.Printf("User Info\n%s\n", utils.ToJSONString(ui))
 	return ui.AppUser.UserType, nil
 
 }
