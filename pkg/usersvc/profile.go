@@ -24,7 +24,6 @@ type EmailUpdateInfo struct {
 func (usvc *UserService) sendEmailUpdateEmail(ctx context.Context, userID string,
 	new_email string) {
 
-	log.Printf("Beginning email update for user ID %s", userID)
 
 	user, err := usvc.svc.DB.Q.GetUser(ctx, userID)
 	if err != nil {

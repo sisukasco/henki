@@ -1,5 +1,5 @@
 db:
-  url: postgres://dbuser:dbsecret@localhost:5432/authdb_dev?sslmode=disable
+  url: postgres://dockuser:xRdkvm54DhjWBjwU@localhost:5432/authdb_dev?sslmode=disable
 jwt:
   secret: Secret
   expiry: 3600

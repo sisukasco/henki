@@ -3,11 +3,10 @@ package usersvc_test
 import (
 	"context"
 	"encoding/json"
-	"github.com/sisukasco/commons/utils"
-	"github.com/sisukasco/henki/pkg/usersvc"
-	"log"
 	"testing"
 	"time"
+
+	"github.com/sisukasco/henki/pkg/usersvc"
 
 	"github.com/stretchr/testify/assert"
 	"syreclabs.com/go/faker"
@@ -54,7 +53,6 @@ func TestUpdateAppUser(t *testing.T) {
 	assert.True(t, ui.ResetPasswordOnConfirmation)
 
 	uu, err := svc.DB.Q.GetUser(ctx, user.ID)
-	log.Printf("User rec\n%v\n", utils.ToJSONString(uu))
 
 	assert.Equal(t, uu.FirstName, au.AccountInfo.Contact.FirstName)
 	assert.Equal(t, uu.LastName, au.AccountInfo.Contact.LastName)

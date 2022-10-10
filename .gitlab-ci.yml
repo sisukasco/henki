@@ -34,6 +34,19 @@ build:
 #     - postgres:13-alpine
 # 
 
+unit_tests:
+  stage: test
+  script: 
+    - export HENKI_REDIS_URL=redis://redis:6379/1
+    - export HENKI_DB_COMMON=1
+    - export HENKI_DB_URL=$HENKI_DB_URL 
+    - go run ./cmd --source ./pkg/db/migrations  --conf conf-dev.yaml migrate up
+    - export SISUKAS_LOGGED_IN_USER_FOR_TESTING=testing_user
+    - go test -p 1 -count=1 $(go list ./...)
+  services:
+    - postgres:13-alpine
+    - redis:6-alpine
+
 
 deploy_docker:
    stage: deploy_docker

@@ -5,10 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"time"
+
 	"github.com/sisukasco/commons/stringid"
 	"github.com/sisukasco/commons/utils"
-	"log"
-	"time"
 )
 
 type UserAccountResponse struct {
@@ -69,7 +69,6 @@ func (usvc *UserService) SwitchToFreeAccount(ctx context.Context, email string) 
 		return nil, errors.New(fmt.Sprintf("SwitchToFreeAccount -> No user with email %s ", email))
 	}
 	if len(user.UserInfo) <= 5 {
-		log.Printf("User %s was already free account. UserInfo:%s ", email, string(user.UserInfo))
 		return &UserAccountResponse{UserID: user.ID}, nil
 	}
 	ui := &UserInfo{}
@@ -85,6 +84,5 @@ func (usvc *UserService) SwitchToFreeAccount(ctx context.Context, email string) 
 		return nil, err
 	}
 
-	log.Printf("Switched user %s to Free account ", user.ID)
 	return &UserAccountResponse{UserID: user.ID}, nil
 }

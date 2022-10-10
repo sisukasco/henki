@@ -8,7 +8,6 @@ import (
 
 	"github.com/sisukasco/commons/http_utils"
 	"github.com/sisukasco/commons/stringid"
-	"github.com/sisukasco/commons/utils"
 	"github.com/sisukasco/henki/pkg/db"
 
 	"github.com/cbroglie/mustache"
@@ -64,7 +63,6 @@ func (usvc *UserService) ConfirmUserEmail(ctx context.Context, code string) (*Co
 
 	uinfo, err := usvc.svc.DB.Q.GetUserByConfirmationToken(ctx, code)
 	if err != nil || len(uinfo.ID) <= 2 {
-		log.Printf(" ConfirmUserEmail err %v, uinfo %v", err, utils.ToJSONString(uinfo))
 		return nil, http_utils.UnprocessableEntityError("Confirmation code does not match").WithInternalError(err)
 	}
 
@@ -90,7 +88,6 @@ func (usvc *UserService) ConfirmUserEmail(ctx context.Context, code string) (*Co
 // So this function is called asynchronously
 func (usvc *UserService) sendConfirmationEmail(ctx context.Context, userID string) {
 
-	log.Printf("sending confirmation email to %s ", userID)
 	user, err := usvc.svc.DB.Q.GetUser(ctx, userID)
 	if err != nil {
 		log.Printf("Error while sending email user not found %v", err)

@@ -3,13 +3,13 @@ package auth_api
 import (
 	"encoding/json"
 	"errors"
-	"github.com/sisukasco/commons/crypto"
-	"github.com/sisukasco/commons/http_utils"
-	"github.com/sisukasco/commons/utils"
-	"github.com/sisukasco/henki/pkg/usersvc"
 	"log"
 	"net/http"
 	"time"
+
+	"github.com/sisukasco/commons/crypto"
+	"github.com/sisukasco/commons/http_utils"
+	"github.com/sisukasco/henki/pkg/usersvc"
 )
 
 func (a *AuthApi) UpdateAccount(w http.ResponseWriter, r *http.Request) {
@@ -29,7 +29,6 @@ func (a *AuthApi) handleUpdateAccount(w http.ResponseWriter,
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("Auth Received UserAccountUpdate request.\n%v\n", utils.ToJSONString(ua))
 
 	signx, err := http_utils.ExtractSignature(r)
 	if err != nil {
@@ -77,7 +76,6 @@ func (a *AuthApi) handleRemoveAccount(w http.ResponseWriter,
 	if err != nil {
 		return nil, err
 	}
-	log.Printf("Auth Received RemoveAccount request.\n%v\n", utils.ToJSONString(rreq))
 
 	signx, err := http_utils.ExtractSignature(r)
 	if err != nil {

@@ -2,11 +2,11 @@ package api
 
 import (
 	"context"
-	"github.com/sisukasco/commons/http_utils"
-	"github.com/sisukasco/henki/pkg/service"
-	"log"
 	"net/http"
 	"time"
+
+	"github.com/sisukasco/commons/http_utils"
+	"github.com/sisukasco/henki/pkg/service"
 
 	chi "github.com/go-chi/chi/v5"
 )
@@ -24,7 +24,6 @@ func (a *PingApi) routes(r *chi.Mux) {
 }
 
 func (a *PingApi) pingTest(w http.ResponseWriter, r *http.Request) {
-	log.Printf("Ping command received ...")
 	ctx, cancel := context.WithTimeout(r.Context(), 1*time.Second)
 	defer cancel()
 	err := a.svc.DB.Ping(ctx)

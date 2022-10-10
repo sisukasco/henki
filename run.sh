@@ -93,6 +93,9 @@ function buildLinuxVersion(){
 }
 
 function runAllTests(){
+    echo "reseting the DB..."
+    resetDevDB
+
     SISUKAS_ENVIRONMENT=development \
     SISUKAS_LOGGED_IN_USER_FOR_TESTING=testing_user \
     go test -p 1 -count=1 $(go list ./...)

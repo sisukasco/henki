@@ -1,7 +1,6 @@
 package api
 
 import (
-	"log"
 	"net/http"
 	"time"
 
@@ -70,8 +69,6 @@ func corsConfig(konf *koanf.Koanf) cors.Options {
 		AllowCredentials: true,
 		MaxAge:           86400, // Maximum value not ignored by any of major browsers
 	}
-
-	log.Printf("Auth returning cors %v", opp)
 
 	return opp
 }

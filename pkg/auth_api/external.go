@@ -4,11 +4,11 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"errors"
-	"github.com/sisukasco/commons/http_utils"
-	"github.com/sisukasco/henki/pkg/external"
-	"log"
 	"net/http"
 	"net/url"
+
+	"github.com/sisukasco/commons/http_utils"
+	"github.com/sisukasco/henki/pkg/external"
 )
 
 func (a *AuthApi) ExternalProviderRedirect(w http.ResponseWriter, r *http.Request) {
@@ -61,7 +61,6 @@ func (a *AuthApi) ExternalProviderCallback(w http.ResponseWriter, r *http.Reques
 	q.Set("ticket", token64)
 
 	strURL := a.svc.Konf.String("client.external_login_complete_url")
-	log.Printf("Redirecting after external URL. env value %s ", strURL)
 
 	strURL += "?" + q.Encode()
 	http.Redirect(w, r, strURL, http.StatusFound)

@@ -2,11 +2,12 @@ package auth_api
 
 import (
 	"encoding/json"
+	"log"
+	"net/http"
+
 	"github.com/sisukasco/commons/http_utils"
 	"github.com/sisukasco/henki/pkg/auth_utils"
 	"github.com/sisukasco/henki/pkg/usersvc"
-	"log"
-	"net/http"
 )
 
 type UpdateProfileField struct {
@@ -82,7 +83,6 @@ func (a *AuthApi) GetUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Printf("Error unmarshalling UserInfo %v", err)
 	} else {
-		log.Printf("UserType is %v", ui.AppUser.UserType)
 		if len(ui.AppUser.UserType) > 0 {
 			resp.PaidUser = true
 		}

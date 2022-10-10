@@ -49,7 +49,6 @@ func (usvc *UserService) generatePasswordResetToken(ctx context.Context, userID 
 //more than once in an hour
 func (usvc *UserService) sendPasswordResetEmail(ctx context.Context, email string) {
 
-	log.Printf("sending password reset email to %s ", email)
 	user, err := usvc.svc.DB.Q.GetUserByEmail(ctx, email)
 	if err != nil {
 		log.Printf("Error while sending reset password link:  user not found %v", err)
