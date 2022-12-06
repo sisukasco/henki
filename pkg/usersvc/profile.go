@@ -24,7 +24,6 @@ type EmailUpdateInfo struct {
 func (usvc *UserService) sendEmailUpdateEmail(ctx context.Context, userID string,
 	new_email string) {
 
-
 	user, err := usvc.svc.DB.Q.GetUser(ctx, userID)
 	if err != nil {
 		log.Printf("Error while sending email change link:  user not found %v", err)
@@ -67,14 +66,20 @@ func (usvc *UserService) sendEmailUpdateEmail(ctx context.Context, userID string
 }
 
 func (usvc *UserService) getMailerConfig() *emailer.EmailConfig {
-	if usvc.svc.Konf.Exists("mailer.smtp") {
+
+	if usvc.svc.Konf.Exists("mailer.ses") {
+
+		ss := usvc.svc.Konf.StringMap("mailer.ses")
+
+		return emailer.NewSESConfig(usvc.svc.Konf.String("mailer.from"),
+			ss["region"], ss["access"], ss["secret"])
+
+	} else if usvc.svc.Konf.Exists("mailer.smtp") {
+
 		ss := usvc.svc.Konf.StringMap("mailer.smtp")
+
 		return emailer.NewSMTPConfig(usvc.svc.Konf.String("mailer.from"),
 			ss["host"], ss["user"], ss["pass"])
-	} else if usvc.svc.Konf.Exists("mailer.ses") {
-		ss := usvc.svc.Konf.StringMap("mailer.ses")
-		return emailer.NewSESConfig(usvc.svc.Konf.String("mailer.from"),
-			ss["region"], ss["access_key"], ss["secret_key"])
 	} else {
 		return &emailer.EmailConfig{}
 	}
