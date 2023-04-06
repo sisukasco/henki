@@ -7,4 +7,5 @@ import (
 func (ca *ClientApi) Routes(r *chi.Mux) {
 	r.Post("/client/create/user", ca.CreateUser)
 	r.Post("/client/get/user", ca.GetUser)
+	r.Post("/client/get/users/ndays", ca.GetUsersCreatedNDaysAgo)
 }
