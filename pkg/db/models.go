@@ -45,4 +45,5 @@ type User struct {
 	UserInfo           json.RawMessage `json:"user_info"`
 	CreatedAt          time.Time       `json:"created_at"`
 	UpdatedAt          time.Time       `json:"updated_at"`
+	BannedAt           sql.NullTime    `json:"banned_at"`
 }
