@@ -67,6 +67,9 @@ func (usvc *UserService) AuthenticateExternalUser(ctx context.Context,
 		if err != nil {
 			return nil, http_utils.InternalServerError("Couldn't get User Rec").WithInternalError(err)
 		}
+		if user.BannedAt.Valid {
+			return nil, http_utils.OauthError("access_denied", "user is blocked")
+		}
 		return usvc.createAccessTokenForUser(ctx, user)
 	} else {
 		passwd := stringid.RandString(32)

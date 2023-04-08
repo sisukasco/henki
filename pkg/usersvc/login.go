@@ -2,6 +2,7 @@ package usersvc
 
 import (
 	"context"
+
 	"github.com/sisukasco/commons/http_utils"
 	"github.com/sisukasco/commons/utils"
 	"github.com/sisukasco/henki/pkg/db"
@@ -43,6 +44,10 @@ func (usvc *UserService) RenewRefreshToken(ctx context.Context,
 	}
 	usvc.svc.DB.Q.ClearRefreshTokens(ctx, user.ID)
 
+	if user.BannedAt.Valid {
+		return nil, http_utils.OauthError("access_denied", "user is blocked")
+	}
+
 	return usvc.createAccessTokenForUser(ctx, &user)
 }
 
@@ -54,6 +59,10 @@ func (usvc *UserService) PasswordLogin(ctx context.Context, params *PasswordLogi
 	if err != nil {
 		return nil, http_utils.OauthError("access_denied", "no such user")
 	}
+	if user.BannedAt.Valid {
+		return nil, http_utils.OauthError("access_denied", "user is blocked")
+	}
+
 	if !user.Authenticate(params.Password) {
 		return nil, http_utils.OauthError("invalid_grant", "Invalid Password")
 	}

@@ -14,6 +14,7 @@ packages:
       - pkg/db/migrations/000001_create_users_table.up.sql
       - pkg/db/migrations/000002_create_refresh_tokens_table.up.sql
       - pkg/db/migrations/000003_create_api_keys_table.up.sql
+      - pkg/db/migrations/000004_update_add_banned_col.up.sql
       
     overrides:
       - column: "users.raw_app_meta_data"

@@ -173,6 +173,37 @@ WHERE ID=$1
 LIMIT 1;
 
 
+-- name: GetUsersSignedUpNDaysAgo :many
+SELECT id, email, first_name, last_name, user_info
+FROM users
+WHERE created_at >= CURRENT_DATE - ($1 || ' day')::INTERVAL
+  AND created_at < CURRENT_DATE - ($1 || ' day')::INTERVAL + INTERVAL '1 day';
+
+
+-- name: InsertUserCustom :one
+INSERT INTO users (id, email, first_name, last_name, created_at, updated_at)
+VALUES ($1, $2, $3, $4, $5, $6)
+RETURNING *;
+
 -- name: GetResetPasswordOnConfirmation :one
 SELECT (coalesce(user_info->>'reset_password_on_confirmation','false'))::boolean
 FROM users WHERE ID=$1;
+
+
+-- name: WasUserBanned :one
+SELECT EXISTS
+(SELECT 1 FROM users WHERE email=$1 AND banned_at IS NOT NULL ) 
+AS "banned";
+
+-- name: BanUser :exec
+UPDATE users
+SET
+  banned_at = NOW()
+WHERE id = $1 ;
+
+-- name: LiftBan :exec
+UPDATE users
+SET
+  banned_at = NULL
+WHERE id = $1 ;
+

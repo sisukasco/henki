@@ -54,6 +54,7 @@ func (usvc *UserService) sendPasswordResetEmail(ctx context.Context, email strin
 		log.Printf("Error while sending reset password link:  user not found %v", err)
 		return
 	}
+	
 
 	resetToken, err := usvc.generatePasswordResetToken(ctx, user.ID)
 
