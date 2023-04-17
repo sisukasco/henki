@@ -59,6 +59,7 @@ type UserResponse struct {
 	AvatarURL      string           `json:"avatar_url"`
 	EndPoints      ServiceEndPoints `json:"endpoints"`
 	PaidUser       bool             `json:"paid_user"`
+	Plan           string           `json:"plan"`
 }
 
 func (a *AuthApi) GetUser(w http.ResponseWriter, r *http.Request) {
@@ -73,6 +74,7 @@ func (a *AuthApi) GetUser(w http.ResponseWriter, r *http.Request) {
 		FirstName: user.FirstName,
 		LastName:  user.LastName,
 		AvatarURL: user.AvatarUrl,
+		Plan:      user.Plan,
 	}
 	if user.ConfirmedAt.Valid {
 		resp.EmailConfirmed = true

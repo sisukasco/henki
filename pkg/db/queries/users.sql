@@ -207,3 +207,9 @@ SET
   banned_at = NULL
 WHERE id = $1 ;
 
+-- name: UpdateUserPlan :exec
+UPDATE users
+SET
+  plan = $1
+WHERE id = $2 ;
+

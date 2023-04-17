@@ -46,4 +46,5 @@ type User struct {
 	CreatedAt          time.Time       `json:"created_at"`
 	UpdatedAt          time.Time       `json:"updated_at"`
 	BannedAt           sql.NullTime    `json:"banned_at"`
+	Plan               string          `json:"plan"`
 }

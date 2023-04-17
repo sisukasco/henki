@@ -137,7 +137,7 @@ func (q *Queries) GetResetPasswordOnConfirmation(ctx context.Context, id string)
 }
 
 const getUser = `-- name: GetUser :one
-SELECT id, email, avatar_url, first_name, last_name, encrypted_password, confirmed_at, invited_at, confirmation_token, confirmation_sent_at, recovery_token, recovery_sent_at, email_change_token, email_change, email_change_sent_at, last_sign_in_at, user_info, created_at, updated_at, banned_at FROM users
+SELECT id, email, avatar_url, first_name, last_name, encrypted_password, confirmed_at, invited_at, confirmation_token, confirmation_sent_at, recovery_token, recovery_sent_at, email_change_token, email_change, email_change_sent_at, last_sign_in_at, user_info, created_at, updated_at, banned_at, plan FROM users
 WHERE id = $1 LIMIT 1
 `
 
@@ -165,6 +165,7 @@ func (q *Queries) GetUser(ctx context.Context, id string) (User, error) {
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.BannedAt,
+		&i.Plan,
 	)
 	return i, err
 }
@@ -189,7 +190,7 @@ func (q *Queries) GetUserByConfirmationToken(ctx context.Context, confirmationTo
 }
 
 const getUserByEmail = `-- name: GetUserByEmail :one
-SELECT id, email, avatar_url, first_name, last_name, encrypted_password, confirmed_at, invited_at, confirmation_token, confirmation_sent_at, recovery_token, recovery_sent_at, email_change_token, email_change, email_change_sent_at, last_sign_in_at, user_info, created_at, updated_at, banned_at FROM users
+SELECT id, email, avatar_url, first_name, last_name, encrypted_password, confirmed_at, invited_at, confirmation_token, confirmation_sent_at, recovery_token, recovery_sent_at, email_change_token, email_change, email_change_sent_at, last_sign_in_at, user_info, created_at, updated_at, banned_at, plan FROM users
 WHERE email = $1 LIMIT 1
 `
 
@@ -217,6 +218,7 @@ func (q *Queries) GetUserByEmail(ctx context.Context, email string) (User, error
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.BannedAt,
+		&i.Plan,
 	)
 	return i, err
 }
@@ -270,7 +272,7 @@ func (q *Queries) GetUserFromRecoveryToken(ctx context.Context, recoveryToken st
 }
 
 const getUserFromRefreshToken = `-- name: GetUserFromRefreshToken :one
-SELECT users.id, users.email, users.avatar_url, users.first_name, users.last_name, users.encrypted_password, users.confirmed_at, users.invited_at, users.confirmation_token, users.confirmation_sent_at, users.recovery_token, users.recovery_sent_at, users.email_change_token, users.email_change, users.email_change_sent_at, users.last_sign_in_at, users.user_info, users.created_at, users.updated_at, users.banned_at FROM users,refresh_tokens
+SELECT users.id, users.email, users.avatar_url, users.first_name, users.last_name, users.encrypted_password, users.confirmed_at, users.invited_at, users.confirmation_token, users.confirmation_sent_at, users.recovery_token, users.recovery_sent_at, users.email_change_token, users.email_change, users.email_change_sent_at, users.last_sign_in_at, users.user_info, users.created_at, users.updated_at, users.banned_at, users.plan FROM users,refresh_tokens
 WHERE refresh_tokens.token = $1 
 AND refresh_tokens.user_id = users.id 
 AND revoked=FALSE 
@@ -301,6 +303,7 @@ func (q *Queries) GetUserFromRefreshToken(ctx context.Context, token string) (Us
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.BannedAt,
+		&i.Plan,
 	)
 	return i, err
 }
@@ -493,7 +496,7 @@ func (q *Queries) InitUpdateUserEmail(ctx context.Context, arg InitUpdateUserEma
 const insertUserCustom = `-- name: InsertUserCustom :one
 INSERT INTO users (id, email, first_name, last_name, created_at, updated_at)
 VALUES ($1, $2, $3, $4, $5, $6)
-RETURNING id, email, avatar_url, first_name, last_name, encrypted_password, confirmed_at, invited_at, confirmation_token, confirmation_sent_at, recovery_token, recovery_sent_at, email_change_token, email_change, email_change_sent_at, last_sign_in_at, user_info, created_at, updated_at, banned_at
+RETURNING id, email, avatar_url, first_name, last_name, encrypted_password, confirmed_at, invited_at, confirmation_token, confirmation_sent_at, recovery_token, recovery_sent_at, email_change_token, email_change, email_change_sent_at, last_sign_in_at, user_info, created_at, updated_at, banned_at, plan
 `
 
 type InsertUserCustomParams struct {
@@ -536,6 +539,7 @@ func (q *Queries) InsertUserCustom(ctx context.Context, arg InsertUserCustomPara
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.BannedAt,
+		&i.Plan,
 	)
 	return i, err
 }
@@ -696,6 +700,23 @@ func (q *Queries) UpdateUserLastName(ctx context.Context, arg UpdateUserLastName
 	return err
 }
 
+const updateUserPlan = `-- name: UpdateUserPlan :exec
+UPDATE users
+SET
+  plan = $1
+WHERE id = $2
+`
+
+type UpdateUserPlanParams struct {
+	Plan string `json:"plan"`
+	ID   string `json:"id"`
+}
+
+func (q *Queries) UpdateUserPlan(ctx context.Context, arg UpdateUserPlanParams) error {
+	_, err := q.db.ExecContext(ctx, updateUserPlan, arg.Plan, arg.ID)
+	return err
+}
+
 const updateUserProfile = `-- name: UpdateUserProfile :exec
 UPDATE users 
 SET 
@@ -741,7 +762,7 @@ INSERT INTO users (
 ) VALUES (
   $1, $2, $3
 )
-RETURNING id, email, avatar_url, first_name, last_name, encrypted_password, confirmed_at, invited_at, confirmation_token, confirmation_sent_at, recovery_token, recovery_sent_at, email_change_token, email_change, email_change_sent_at, last_sign_in_at, user_info, created_at, updated_at, banned_at
+RETURNING id, email, avatar_url, first_name, last_name, encrypted_password, confirmed_at, invited_at, confirmation_token, confirmation_sent_at, recovery_token, recovery_sent_at, email_change_token, email_change, email_change_sent_at, last_sign_in_at, user_info, created_at, updated_at, banned_at, plan
 `
 
 type createNewUserParams struct {
@@ -774,6 +795,7 @@ func (q *Queries) createNewUser(ctx context.Context, arg createNewUserParams) (U
 		&i.CreatedAt,
 		&i.UpdatedAt,
 		&i.BannedAt,
+		&i.Plan,
 	)
 	return i, err
 }
